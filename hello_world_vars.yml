@@ -1,0 +1,9 @@
+- name: Hello World Sample
+  hosts: all
+  vars:
+    var1: "Variable 1"
+    var2: "Variable 2"
+  tasks:
+    - name: Hello Message with variables
+      debug:
+        msg: "Hello World! This is an example of how to use variables: {{ var1 }} and {{ var2 }}"
