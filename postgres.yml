@@ -22,11 +22,12 @@
       command: oc new-project {{ openshift_project }}
       when: "'Active' not in project_exists.stdout"
 
-    - name: Apply PostgreSQL Cluster Configuration
-      template:
-        src: templates/postgres_cluster.yml.j2
-        dest: /tmp/postgres_cluster.yaml
+    - name: Template PostgreSQL yaml file
+      set_fact:
+        postgres_yaml: "{{ lookup('template', 'templates/postgres_cluster.yml.j2') }}"
 
-    - name: Apply PostgreSQL YAML to OpenShift
-      command: oc apply -f /tmp/postgres_cluster.yaml
+    - name: Create PostgreSQL cluster
+      command: oc apply -f -
+      args:
+        stdin: "{{ postgres_yaml }}"
       changed_when: true
