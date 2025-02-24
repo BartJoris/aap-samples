@@ -3,15 +3,7 @@
   vars:
     openshift_project: postgres-example
     postgres_cluster_name: postgres-cluster
-    openshift_api: "https://${KUBERNETES_SERVICE_HOST}:${KUBERNETES_SERVICE_PORT}"
-    openshift_token: "{{ lookup('file', '/var/run/secrets/kubernetes.io/serviceaccount/token') }}"
-    ca_cert_path: "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
   tasks:
-    - name: Authenticate with OpenShift
-      command: >
-        oc login --server={{ openshift_api }} --token={{ openshift_token }} --certificate-authority={{ ca_cert_path }}
-      changed_when: false
-
     - name: OC get user info
       command: oc whoami
       register: oc_whoami
