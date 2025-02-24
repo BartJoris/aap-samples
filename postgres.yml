@@ -25,7 +25,7 @@
     - name: Apply PostgreSQL Cluster Configuration
       template:
         src: templates/postgres_cluster.yml.j2
-        dest: /tmp/postgres-cluster.yaml
+        dest: /tmp/postgres_cluster.yaml
 
     - name: Apply PostgreSQL YAML to OpenShift
       command: oc apply -f /tmp/postgres_cluster.yaml
