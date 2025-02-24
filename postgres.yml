@@ -11,7 +11,10 @@
       changed_when: false
 
     - name: Create OpenShift Project if it does not exist
-      command: oc new-project {{ openshift_project }}
+      command: >
+        oc new-project {{ openshift_project }}
+      register: create_project
+      failed_when: create_project.rc != 0 and "already exists" not in create_project.stderr
       when: "'Active' not in project_exists.stdout"
 
     - name: Template PostgreSQL yaml file
