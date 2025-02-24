@@ -1,4 +1,4 @@
-- name: Hello World Sample
+- name: Create a PostgreSQL Cluster
   hosts: all
   vars:
     openshift_project: postgres-example
@@ -13,7 +13,7 @@
       changed_when: false
 
     - name: Ensure OpenShift Project Exists
-      command: oc new-project {{ openshift_project }} || true
+      command: oc new-project {{ openshift_project }}
       changed_when: false
 
     - name: Apply PostgreSQL Cluster Configuration
