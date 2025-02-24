@@ -1,0 +1,32 @@
+- name: Hello World Sample
+  hosts: all
+  vars:
+    openshift_project: postgres-example
+    postgres_cluster_name: postgres-cluster
+    openshift_api: https://api.ocp4.example.com:6443
+    openshift_user: admin
+    openshift_password: admin1234
+  tasks:
+    - name: Log in to OpenShift
+      command: >
+        oc login {{ openshift_api }} --username={{ openshift_user }} --password={{ openshift_password }} --insecure-skip-tls-verify
+      changed_when: false
+
+    - name: Ensure OpenShift Project Exists
+      command: oc new-project {{ openshift_project }} || true
+      changed_when: false
+
+    - name: Apply PostgreSQL Cluster Configuration
+      kubernetes.core.k8s:
+        state: present
+        namespace: "{{ openshift_project }}"
+        definition: "{{ lookup('template', 'templates/postgres_cluster.yaml.j2') }}"
+
+    - name: Apply PostgreSQL Cluster Configuration
+      template:
+        src: templates/postgres_cluster.yaml.j2
+        dest: /tmp/postgres-cluster.yaml
+
+    - name: Apply PostgreSQL YAML to OpenShift
+      command: oc apply -f /tmp/postgres_cluster.yaml
+      changed_when: true
