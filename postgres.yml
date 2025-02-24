@@ -20,7 +20,7 @@
       kubernetes.core.k8s:
         state: present
         namespace: "{{ openshift_project }}"
-        definition: "{{ lookup('template', 'templates/postgres_cluster.yaml.j2') }}"
+        definition: "{{ lookup('template', 'templates/postgres_cluster.yml.j2') }}"
 
     - name: Apply PostgreSQL Cluster Configuration
       template:
