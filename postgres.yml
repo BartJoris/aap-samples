@@ -12,10 +12,6 @@
         oc login {{ openshift_api }} --username={{ openshift_user }} --password={{ openshift_password }} --insecure-skip-tls-verify
       changed_when: false
 
-    - name: OC get user info
-      command: oc whoami
-      register: oc_whoami
-
     - name: Check if OpenShift Project Exists
       command: oc get project {{ openshift_project }}
       register: project_exists
