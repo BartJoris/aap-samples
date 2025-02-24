@@ -4,6 +4,10 @@
     openshift_project: postgres-example
     postgres_cluster_name: postgres-cluster
   tasks:
+    - name: OC get user info
+      command: oc whoami
+      register: oc_whoami
+
     - name: Check if OpenShift Project Exists
       command: oc get project {{ openshift_project }}
       register: project_exists
