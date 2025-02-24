@@ -12,19 +12,19 @@
         oc login {{ openshift_api }} --username={{ openshift_user }} --password={{ openshift_password }} --insecure-skip-tls-verify
       changed_when: false
 
-    - name: Ensure OpenShift Project Exists
-      command: oc new-project {{ openshift_project }}
+    - name: Check if OpenShift Project Exists
+      command: oc get project {{ openshift_project }}
+      register: project_exists
+      failed_when: false
       changed_when: false
 
-    - name: Apply PostgreSQL Cluster Configuration
-      kubernetes.core.k8s:
-        state: present
-        namespace: "{{ openshift_project }}"
-        definition: "{{ lookup('template', 'templates/postgres_cluster.yml.j2') }}"
+    - name: Create OpenShift Project if it does not exist
+      command: oc new-project {{ openshift_project }}
+      when: "'Active' not in project_exists.stdout"
 
     - name: Apply PostgreSQL Cluster Configuration
       template:
-        src: templates/postgres_cluster.yaml.j2
+        src: templates/postgres_cluster.yml.j2
         dest: /tmp/postgres-cluster.yaml
 
     - name: Apply PostgreSQL YAML to OpenShift
